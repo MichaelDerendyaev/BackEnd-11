@@ -32,8 +32,14 @@ class TicTacToe:
                 print(self)
                 pos = self.make_turn()
                 if self.win_move(pos):
+                    print(self)
                     print(f"{self.players[self.turn % 2]}, поздравляем!")
                     print(f"Вы не оставили игроку {self.players[(self.turn + 1) % 2]} ни шанса!")
+                    break
+                if self.turn > 8:
+                    print(self)
+                    print(f"Уважаемые игроки {self.players[0]} и {self.players[1]}, поле заполнено")
+                    print("Это означает, что победила ваша крепкая дружба!")
                     break
             ans = self.ask_for_repetition()
 
@@ -41,6 +47,7 @@ class TicTacToe:
         pos = input(f"{self.players[self.turn % 2]}, делайте ваш ход: ")
         while not pos.isdigit() or int(pos) not in range(1, 10) or self.board[int(pos)-1] != 0:
             print("Неправильный ход, нужно указать цифру от 1 до 9")
+            print("Нельзя также туда ходить, куда ход сделан был")
             pos = input(f"{self.players[self.turn % 2]}, делайте правильный ход: ")
         return int(pos)
 
@@ -77,19 +84,16 @@ class TicTacToe:
         ascline = [1, 5, 9]
         if pos in ascline:
             ascline = [self.board[i-1] for i in ascline]
-            print(ascline)
             ascline = reduce(lambda x, y: x*y, ascline)
         else:
             ascline = 0
         descline = [3, 5, 7]
         if pos in descline:
             descline = [self.board[i-1] for i in descline]
-            print(descline)
             descline = reduce(lambda x, y: x*y, descline)
         else:
             descline = 0
         target = (self.turn % 2 + 1)**3
-        print(target, [hline, wline, ascline, descline])
         if target in [hline, wline, ascline, descline]:
             return True
         self.turn += 1
@@ -100,4 +104,3 @@ if __name__ == "__main__":
     t = TicTacToe()
     t.mainloop()
     print("Спасибо, что поиграли в эту игру! До встречи!")
-
