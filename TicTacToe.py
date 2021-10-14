@@ -8,18 +8,18 @@ class TicTacToe:
         self.board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def __str__(self):
-        s = ""
+        res = ""
         for i in range(1, 10):
             j = self.board[i-1]
             if j == 0:
-                s += str(i)
+                res += str(i)
             elif j == 1:
-                s += "X"
+                res += "X"
             else:
-                s += "O"
+                res += "O"
             if i % 3 == 0:
-                s += "\n"
-        return s
+                res += "\n"
+        return res
 
     def __repr__(self):
         return str(self)
