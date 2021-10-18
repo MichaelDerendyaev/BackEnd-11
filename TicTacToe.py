@@ -28,6 +28,7 @@ class TicTacToe:
         ans = True
         while ans:
             self.board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            self.turn = 0
             while True:
                 print(self)
                 pos = self.make_turn()
