@@ -18,7 +18,6 @@ class CustomMeta(type):
         return super(CustomMeta, cls).__new__(cls, name, bases, newdct)
 
 
-
 class CustomClass(metaclass=CustomMeta):
     x = 50
 
@@ -27,6 +26,7 @@ class CustomClass(metaclass=CustomMeta):
 
     def line(self):
         return 100
+
 
 if __name__ == "__main__":
     inst = CustomClass()
