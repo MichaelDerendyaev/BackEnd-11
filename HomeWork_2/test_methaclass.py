@@ -29,126 +29,26 @@ class MyTest(unittest.TestCase):
         self.sample_class = Sample(1, 45000, True)
 
     def test_attrs(self):
-        flag = False
-        try:
-            self.sample_class.type_
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_type_
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.seria_
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_seria_
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.code_
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_code_
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.date
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_date
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.time
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_time
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.reg
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_reg
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.__init__
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.custom___init__
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.deletion
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_deletion
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.change
-        except:
-            flag = True
-        self.assertTrue(flag)
-        flag = False
-        try:
-            self.sample_class.custom_change
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.__add__
-        except:
-            flag = True
-        self.assertTrue(not flag)
-        flag = False
-        try:
-            self.sample_class.custom___add__
-        except:
-            flag = True
-        self.assertTrue(flag)
+        self.assertRaises(AttributeError, lambda: self.sample_class.type_)
+        self.sample_class.custom_type_
+        self.assertRaises(AttributeError, lambda: self.sample_class.seria_)
+        self.sample_class.custom_seria_
+        self.assertRaises(AttributeError, lambda: self.sample_class.code_)
+        self.sample_class.custom_code_
+        self.assertRaises(AttributeError, lambda: self.sample_class.date)
+        self.sample_class.custom_date
+        self.assertRaises(AttributeError, lambda: self.sample_class.time)
+        self.sample_class.custom_time
+        self.assertRaises(AttributeError, lambda: self.sample_class.reg)
+        self.sample_class.custom_reg
+        self.assertRaises(AttributeError, lambda: self.sample_class.custom___init__)
+        self.sample_class.__init__
+        self.assertRaises(AttributeError, lambda: self.sample_class.deletion)
+        self.sample_class.custom_deletion
+        self.assertRaises(AttributeError, lambda: self.sample_class.change)
+        self.sample_class.custom_change
+        self.assertRaises(AttributeError, lambda: self.sample_class.custom___add__)
+        self.sample_class.__add__
 
     def tearDown(self) -> None:
         pass
