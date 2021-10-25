@@ -19,36 +19,16 @@ class CustomList(list):
         return self + other
 
     def __sub__(self, other):
-        a = len(self)
-        b = len(other)
-        ans = CustomList([])
-        if a < b:
-            for i in range(a):
-                ans.append(self[i] - other[i])
-            for i in range(a, b):
-                ans.append(-other[i])
-        else:
-            for i in range(b):
-                ans.append(self[i] - other[i])
-            for i in range(b, a):
-                ans.append(self[i])
-        return ans
+        ans = CustomList(other)
+        for i in range(len(ans)):
+            ans[i] *= -1
+        return ans + self
 
     def __rsub__(self, other):
-        a = len(self)
-        b = len(other)
-        ans = CustomList([])
-        if a < b:
-            for i in range(a):
-                ans.append(-self[i] + other[i])
-            for i in range(a, b):
-                ans.append(other[i])
-        else:
-            for i in range(b):
-                ans.append(-self[i] + other[i])
-            for i in range(b, a):
-                ans.append(-self[i])
-        return ans
+        ans = CustomList(self)
+        for i in range(len(ans)):
+            ans[i] *= -1
+        return ans + other
 
     def __gt__(self, other):
         return sum(self) > sum(other)
