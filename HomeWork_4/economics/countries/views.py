@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed
 from django.http.response import JsonResponse
+from django.views.decorators.http import require_POST, require_GET
 
 
 tmp_data_countries_list = {
