@@ -1,57 +1,92 @@
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http import HttpResponseBadRequest, HttpResponseNotFound
 from django.http.response import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
+from .models import Country
+from regions.models import Region
 
 
-tmp_data_countries_list = {
-    1: 'Зона спокойствия',
-    2: 'Раздражение слизистой',
-    3: 'Страх ночи',
-    4: 'Злость отчима',
-    5: 'Радость встречи',
-}
-
-tmp_data_countries_info = {
-    1: {'Площадь': '25 млн кв.км','Население': '50 млн','Богатство': 'Умеренно','Удовлетворение': 'На высшем уровне'},
-    2: {'Площадь': '15 млн кв.км','Население': '1.1 млн','Богатство': 'Мало','Удовлетворение': 'Немного неприятно, но терпимо'},
-    3: {'Площадь': '10 млн кв.км','Население': '3.3 млн','Богатство': 'Высоко','Удовлетворение': 'Если не спать, то пойдёт'},
-    4: {'Площадь': '20 млн кв.км','Население': '2.2 млн','Богатство': 'Мало','Удовлетворение': 'Проще повеситься'},
-    5: {'Площадь': '5 млн кв.км','Население': '0.5 млн','Богатство': 'Умеренно','Удовлетворение': 'Лучше не бывает'},
-}
-
-
+@require_GET
 def country_list(request):
-    if request.method == 'GET':
-        return JsonResponse(tmp_data_countries_list)
-    elif request.method == 'POST':
-        try:
-            country_id = int(request.POST.get('country_id'))
-            name = request.POST.get('name')
-        except TypeError:
-            return HttpResponseBadRequest('country_id must be integer')
-        if name is None:
-            return HttpResponseBadRequest('Not all parameters!\nParameters: country_id, name')
-        tmp_data_countries_list[country_id] = name
-        return JsonResponse(tmp_data_countries_list)
-    else:
-        return HttpResponseNotAllowed(['GET', 'POST'])
+    countries = Country.objects.all()
+    data = [
+        {
+            'id':  country.id,
+            'name':  country.name,
+            'country':  country.region.name,
+        } for country in countries
+    ]
+    return JsonResponse({'countries': data})
 
 
+@require_GET
 def country_info(request, country_id):
-    if not isinstance(country_id, int):
-        return HttpResponseBadRequest("country_id must be integer")
-    country_id = int(country_id)
-    if request.method == 'GET':
-        return JsonResponse(tmp_data_countries_info[country_id])
-    elif request.method == 'POST':
-        wealth = request.POST.get('wealth')
-        area = request.POST.get('area')
-        population = request.POST.get('population')
-        pleasure = request.POST.get('pleasure')
-        if wealth is None or area is None or population is None or pleasure is None:
-            return HttpResponseBadRequest("Not all parameters!\nParameters: wealth, area, population, pleasure")
-        tmp_data_countries_info[country_id] = {'Площадь': area,'Население': population,'Богатство': wealth,'Удовлетворение': pleasure}
-        return JsonResponse(tmp_data_countries_info[country_id])
-    else:
-        return HttpResponseNotAllowed(['GET', 'POST'])
+    try:
+        country = Country.objects.get(id=country_id)
+        data = {
+            'name': country.name,
+            'region': country.region.name,
+            'wealth': country.wealth,
+            'area': f"{country.area} km^2",
+            'population': f"{country.population} mln",
+            'pleasure': country.pleasure,
+        }
+        return JsonResponse({f"country with id={country_id}": data})
+    except Country.DoesNotExist:
+        return HttpResponseNotFound("<h2>Country not found</h2>")
+
+
+@require_GET
+def country_delete(request, country_id):
+    try:
+        country = Country.objects.get(id=country_id)
+        country.delete()
+        return render(request, 'deletion.html')
+    except Country.DoesNotExist:
+        return HttpResponseNotFound("<h2>Country not found</h2>")
+
+
+@require_POST
+def country_edit(request, country_id):
+    try:
+        country = Country.objects.get(id=country_id)
+        country.name = request.POST.get("name")
+        country.wealth = request.POST.get("wealth")
+        country.area = request.POST.get("area")
+        country.population = request.POST.get("population")
+        country.pleasure = request.POST.get("pleasure")
+        region_id = int(request.POST.get("region_id"))
+        region = Region.objects.get(id=region_id)
+        country.region = region
+        country.save()
+        return render(request, 'editing.html')
+    except Country.DoesNotExist:
+        return HttpResponseNotFound("<h2>Country not found</h2>")
+    except Region.DoesNotExist:
+        return HttpResponseNotFound("<h2>Region not found</h2>")
+    except ValueError:
+        return HttpResponseNotFound("<h2>invalid input parameters</h2>")
+    except TypeError:
+        return HttpResponseBadRequest("<h2>invalid input parameters</h2>")
+
+
+@require_POST
+def country_create(request):
+    try:
+        country = Country()
+        country.name = request.POST.get("name")
+        country.wealth = request.POST.get("wealth")
+        country.area = request.POST.get("area")
+        country.population = request.POST.get("population")
+        country.pleasure = request.POST.get("pleasure")
+        region_id = int(request.POST.get("region_id"))
+        region = Region.objects.get(id=region_id)
+        country.region = region
+        country.save()
+        return render(request, 'creation.html')
+    except Region.DoesNotExist:
+        return HttpResponseNotFound("<h2>Region not found</h2>")
+    except ValueError:
+        return HttpResponseBadRequest("<h2>invalid input parameters</h2>")
+    except TypeError:
+        return HttpResponseBadRequest("<h2>invalid input parameters</h2>")
