@@ -36,7 +36,7 @@ def city_info(request, city_id):
         return HttpResponseNotFound("<h2>City not found</h2>")
 
 
-@require_GET
+@require_POST
 def city_delete(request, city_id):
     try:
         city = City.objects.get(id=city_id)

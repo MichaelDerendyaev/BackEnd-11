@@ -34,7 +34,7 @@ def region_info(request, region_id):
         return HttpResponseNotFound("<h2>Region not found</h2>")
 
 
-@require_GET
+@require_POST
 def region_delete(request, region_id):
     try:
         region = Region.objects.get(id=region_id)

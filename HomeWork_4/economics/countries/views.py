@@ -36,7 +36,7 @@ def country_info(request, country_id):
         return HttpResponseNotFound("<h2>Country not found</h2>")
 
 
-@require_GET
+@require_POST
 def country_delete(request, country_id):
     try:
         country = Country.objects.get(id=country_id)
